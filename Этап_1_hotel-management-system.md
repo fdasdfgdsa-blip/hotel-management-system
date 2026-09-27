@@ -306,13 +306,40 @@ BookingModule ──► IRoomReservationService ──► RoomModule
 
 ---
 
-# 6. Предполагаемая структура решения
+# 6. Структура решения
+
+## 6.1. Текущий состав репозитория (этап 1)
+
+```
+hotel-management-system/
+ │
+ ├── docs/
+ │   ├── project-scope.md
+ │   ├── modules.md
+ │   ├── architecture.md
+ │   ├── dependencies.md
+ │   ├── contracts.md
+ │   ├── protocol-room-reservation.md
+ │   ├── protocol-service-booking.md
+ │   ├── testing.md
+ │   ├── version-control.md
+ │   └── decisions/
+ │       ├── ADR-001-modular-architecture.md
+ │       └── ADR-002-module-contracts.md
+ │
+ ├── img/
+ │   └── architecture.png
+ │
+ ├── Этап_1_hotel-management-system.md
+ └── README.md
+```
+
+## 6.2. Планируемая структура решения на этапе реализации
 
 ```
 HotelManagement/
  │
  ├── src/
- │   │
  │   ├── HotelManagement.Api/
  │   ├── HotelManagement.Rooms/
  │   ├── HotelManagement.Booking/
@@ -321,16 +348,11 @@ HotelManagement/
  │   └── HotelManagement.Contracts/
  │
  ├── tests/
- │   │
  │   ├── HotelManagement.UnitTests/
  │   └── HotelManagement.IntegrationTests/
  │
  ├── docs/
- │   │
- │   └── decisions/
- │       ├── ADR-001-modular-architecture.md
- │       └── ADR-002-module-contracts.md
- │
+ ├── img/
  ├── .gitignore
  ├── .editorconfig
  ├── README.md
