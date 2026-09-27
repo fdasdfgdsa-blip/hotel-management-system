@@ -1064,6 +1064,7 @@ RoomModule
 
 В рамках этапа были созданы следующие документы:
 
+```
 docs/project-scope.md
 docs/modules.md
 docs/architecture.md
@@ -1076,14 +1077,25 @@ docs/version-control.md
 docs/decisions/ADR-001-modular-architecture.md
 docs/decisions/ADR-002-module-contracts.md
 README.md
+```
 
 Графический артефакт:
 
+```
 img/architecture.png
+```
 
-Единый отчёт по этапу:
+Отчёт по этапу:
 
+```
 Этап_1_hotel-management-system.md
+```
+
+Модели DTO описаны в Markdown в разделе 9 отчёта; на этапе реализации
+они будут вынесены в проект `src/HotelManagement.Contracts/`.
+
+Каждое изменение зафиксировано отдельным коммитом в рабочей ветке
+`docs/project-artifacts` (перечень коммитов — в разделе 21).
 
 ---
 
