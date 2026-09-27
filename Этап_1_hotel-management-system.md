@@ -226,3 +226,84 @@ git commit --allow-empty -m "chore: initial commit"
 - просмотр истории бронирований.
 
 ---
+
+# 5. Архитектурная схема
+
+Для проекта выбрана модульная архитектура.
+
+![Архитектурная схема ИС управления гостиницей](img/architecture.png)
+
+Диаграмма построена по коду Mermaid на сайте https://mermaid.live.
+Исходный код диаграммы приведён ниже и хранится в этом отчёте.
+
+```mermaid
+flowchart TB
+    Guest(["Гость"])
+    Admin(["Администратор"])
+    ClientApp["Клиентское приложение<br/>(браузер)"]
+
+    subgraph Host ["ASP.NET Core API Host"]
+        Api["ApiHost"]
+
+        subgraph Modules ["Бизнес-модули"]
+            Booking["BookingModule<br/>бронирование"]
+            Room["RoomModule<br/>номерной фонд"]
+            GuestM["GuestModule<br/>гости"]
+            Service["ServiceModule<br/>доп. услуги"]
+        end
+
+        Db[("SQLite / EF Core")]
+    end
+
+    Guest -->|HTTPS| ClientApp
+    Admin -->|HTTPS| ClientApp
+    ClientApp -->|"REST / JSON"| Api
+
+    Api --> Booking
+    Api --> Room
+    Api --> GuestM
+    Api --> Service
+
+    Booking -->|"резервирование номера"| Room
+    Booking -->|"добавление услуги"| Service
+    Booking -->|"данные гостя"| GuestM
+
+    Booking --> Db
+    Room --> Db
+    GuestM --> Db
+    Service --> Db
+```
+
+## Описание схемы
+
+| Компонент | Назначение |
+|-----------|-----------|
+| ApiHost | Точка входа: приём и маршрутизация HTTP-запросов |
+| BookingModule | Создание и управление бронированиями |
+| RoomModule | Номерной фонд и проверка доступности номеров |
+| GuestModule | Хранение и управление данными гостей |
+| ServiceModule | Учёт дополнительных услуг гостиницы |
+| SQLite / EF Core | Хранение данных в учебной версии проекта |
+
+Центральным модулем бизнес-процесса является `BookingModule`.
+
+При создании бронирования он:
+
+1. получает данные гостя из `GuestModule`;
+2. проверяет доступность номера в `RoomModule`;
+3. резервирует номер в `RoomModule`;
+4. создаёт бронирование;
+5. при необходимости добавляет услуги через `ServiceModule`.
+
+Бизнес-модули не обращаются к внутренним классам друг друга напрямую:
+взаимодействие выполняется только через публичные интерфейсы и DTO
+из слоя Contracts, например:
+
+```
+BookingModule ──► IRoomReservationService ──► RoomModule
+```
+
+Это обеспечивает слабую связанность и тестируемость модулей.
+
+---
+
