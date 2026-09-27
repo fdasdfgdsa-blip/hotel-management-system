@@ -1038,3 +1038,30 @@ RoomModule
 | Создан журнал технических решений | Выполнено |
 
 ---
+
+# 20. Изменения в репозитории
+
+В рамках этапа были созданы следующие документы:
+
+docs/project-scope.md
+docs/modules.md
+docs/architecture.md
+docs/dependencies.md
+docs/contracts.md
+docs/protocol-room-reservation.md
+docs/protocol-service-booking.md
+docs/testing.md
+docs/version-control.md
+docs/decisions/ADR-001-modular-architecture.md
+docs/decisions/ADR-002-module-contracts.md
+README.md
+
+Графический артефакт:
+
+img/architecture.png
+
+Единый отчёт по этапу:
+
+Этап_1_hotel-management-system.md
+
+---
