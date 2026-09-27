@@ -405,3 +405,94 @@ RoomModule
 Конкретные версии библиотек должны быть зафиксированы в файлах проекта.
 
 ---
+
+# 9. Основные DTO проекта
+
+Для передачи данных между слоями и модулями создаются DTO.
+
+## 9.1. RoomDto
+
+```csharp
+public record RoomDto(
+    Guid Id,
+    string Number,
+    string CategoryName,
+    int Floor,
+    decimal PricePerNight,
+    int Capacity,
+    bool IsAvailable
+);
+```
+
+## 9.2. CreateBookingRequest
+
+```csharp
+public record CreateBookingRequest(
+    Guid GuestId,
+    Guid RoomId,
+    DateOnly CheckInDate,
+    DateOnly CheckOutDate,
+    string? Comment
+);
+```
+
+## 9.3. BookingDto
+
+```csharp
+public record BookingDto(
+    Guid Id,
+    Guid GuestId,
+    Guid RoomId,
+    DateOnly CheckInDate,
+    DateOnly CheckOutDate,
+    decimal TotalPrice,
+    string Status
+);
+```
+
+## 9.4. ReserveRoomRequest
+
+```csharp
+public record ReserveRoomRequest(
+    Guid RoomId,
+    Guid BookingId,
+    DateOnly CheckInDate,
+    DateOnly CheckOutDate
+);
+```
+
+## 9.5. ReserveRoomResult
+
+```csharp
+public record ReserveRoomResult(
+    bool Success,
+    string? ErrorCode
+);
+```
+
+## 9.6. AddServiceRequest
+
+```csharp
+public record AddServiceRequest(
+    Guid BookingId,
+    Guid ServiceId,
+    int Quantity,
+    DateTime? ServiceDate
+);
+```
+
+## 9.7. ServiceDto
+
+```csharp
+public record ServiceDto(
+    Guid Id,
+    Guid BookingId,
+    Guid ServiceId,
+    string Name,
+    decimal Price,
+    int Quantity,
+    string Status
+);
+```
+
+---
