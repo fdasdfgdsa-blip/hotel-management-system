@@ -307,3 +307,36 @@ BookingModule ──► IRoomReservationService ──► RoomModule
 
 ---
 
+# 6. Предполагаемая структура решения
+
+```
+HotelManagement/
+ │
+ ├── src/
+ │   │
+ │   ├── HotelManagement.Api/
+ │   ├── HotelManagement.Rooms/
+ │   ├── HotelManagement.Booking/
+ │   ├── HotelManagement.Services/
+ │   ├── HotelManagement.Guests/
+ │   └── HotelManagement.Contracts/
+ │
+ ├── tests/
+ │   │
+ │   ├── HotelManagement.UnitTests/
+ │   └── HotelManagement.IntegrationTests/
+ │
+ ├── docs/
+ │   │
+ │   └── decisions/
+ │       ├── ADR-001-modular-architecture.md
+ │       └── ADR-002-module-contracts.md
+ │
+ ├── .gitignore
+ ├── .editorconfig
+ ├── README.md
+ ├── Этап_1_hotel-management-system.md
+ └── HotelManagement.sln
+```
+
+---
