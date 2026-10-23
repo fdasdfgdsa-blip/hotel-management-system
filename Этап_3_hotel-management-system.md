@@ -157,3 +157,36 @@ BookingModule: BookingService.CreateAsync
   ▼
 CreateBookingResult ──► ApiHost ──► 201 BookingDto / 4xx { errorCode }
 ```
+
+---
+
+# 9. Журналирование
+
+В модулях используется `ILogger<T>`
+(пакет `Microsoft.Extensions.Logging.Abstractions` 9.0.0).
+В каждое сообщение передаётся контекст операции: идентификаторы
+бронирования, номера и гостя, период, код ошибки.
+
+Фрагмент журнала при запуске API (`dotnet run --project src/HotelManagement.Api`):
+
+```text
+info: HotelManagement.Booking.BookingService[0]
+      Create booking 0c9f0fc4-cae0-4bed-a371-d806585d61df: guest 22222222-2222-2222-2222-222222222222, room 11111111-1111-1111-1111-111111111201, period 12/10/2026 - 12/12/2026
+info: HotelManagement.Rooms.RoomReservationService[0]
+      Reserve room 11111111-1111-1111-1111-111111111201 for booking 0c9f0fc4-cae0-4bed-a371-d806585d61df, period 12/10/2026 - 12/12/2026
+info: HotelManagement.Rooms.RoomReservationService[0]
+      Room 11111111-1111-1111-1111-111111111201 reserved for booking 0c9f0fc4-cae0-4bed-a371-d806585d61df
+info: HotelManagement.Booking.BookingService[0]
+      Booking 0c9f0fc4-cae0-4bed-a371-d806585d61df created: 2 nights, total price 14000
+info: HotelManagement.Booking.BookingService[0]
+      Create booking 58fe7092-f60d-4189-8450-1fa28e5aee2d: guest 22222222-2222-2222-2222-222222222222, room 11111111-1111-1111-1111-111111111201, period 12/11/2026 - 12/13/2026
+info: HotelManagement.Rooms.RoomReservationService[0]
+      Reserve room 11111111-1111-1111-1111-111111111201 for booking 58fe7092-f60d-4189-8450-1fa28e5aee2d, period 12/11/2026 - 12/13/2026
+warn: HotelManagement.Rooms.RoomReservationService[0]
+      Reservation rejected: ROOM_NOT_AVAILABLE, room 11111111-1111-1111-1111-111111111201, booking 58fe7092-f60d-4189-8450-1fa28e5aee2d, period 12/11/2026 - 12/13/2026
+warn: HotelManagement.Booking.BookingService[0]
+      Booking 58fe7092-f60d-4189-8450-1fa28e5aee2d not created: ROOM_NOT_AVAILABLE
+```
+
+По идентификатору бронирования видно, как один запрос проходит
+через оба модуля.
