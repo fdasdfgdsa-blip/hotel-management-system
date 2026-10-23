@@ -20,3 +20,26 @@
 Контракт API на последующих этапах может быть дополнительно
 описан средствами OpenAPI.
 
+
+---
+
+# Контракты модулей в коде
+
+Контракты взаимодействия модулей находятся в проекте
+`src/HotelManagement.Contracts`. Модули ссылаются только на этот проект
+и не обращаются к классам друг друга напрямую.
+
+| Контракт | Получатель | Назначение |
+|----------|-----------|-----------|
+| `IRoomReservationService` | RoomModule | Резервирование номера на период (протокол № 1) |
+| `IRoomCatalogService` | RoomModule | Получение данных о номерах, в том числе цены за ночь |
+
+DTO: `RoomDto`, `ReserveRoomRequest`, `ReserveRoomResult`,
+`CreateBookingRequest`, `BookingDto`, `CreateBookingResult`.
+
+Коды ошибок резервирования вынесены в `RoomErrorCodes`:
+`ROOM_NOT_FOUND`, `ROOM_NOT_AVAILABLE`, `INVALID_BOOKING_PERIOD`.
+
+`BookingModule` использует оба контракта: сначала получает номер
+через `IRoomCatalogService` (для расчёта стоимости), затем
+резервирует его через `IRoomReservationService`.
