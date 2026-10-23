@@ -53,7 +53,7 @@ Task<ReserveRoomResult> ReserveAsync(
 |-----|----------|
 | ROOM_NOT_FOUND | Номер не существует |
 | ROOM_NOT_AVAILABLE | Номер занят на выбранный период |
-| INVALID_BOOKING_PERIOD | Некорректный период проживания |
+| INVALID_BOOKING_PERIOD | Некорректный период проживания: дата выселения раньше даты заселения или совпадает с ней |
 
 Пример:
 
