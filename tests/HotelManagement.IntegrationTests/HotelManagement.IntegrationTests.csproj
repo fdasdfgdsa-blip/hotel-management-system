@@ -18,4 +18,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\HotelManagement.Api\HotelManagement.Api.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -18,4 +18,11 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\HotelManagement.Rooms\HotelManagement.Rooms.csproj" />
+    <ProjectReference Include="..\..\src\HotelManagement.Booking\HotelManagement.Booking.csproj" />
+    <ProjectReference Include="..\..\src\HotelManagement.Services\HotelManagement.Services.csproj" />
+    <ProjectReference Include="..\..\src\HotelManagement.Guests\HotelManagement.Guests.csproj" />
+  </ItemGroup>
+
 </Project>
