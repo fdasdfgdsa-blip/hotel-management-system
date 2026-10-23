@@ -77,3 +77,21 @@ git log -1 --oneline
 Ветки `feature/room-module` и `feature/booking-module` создавались
 от одного и того же состояния `develop` (после слияния контракта)
 и разрабатывались параллельно. Все ветки слиты в `develop` с `--no-ff`.
+
+---
+
+# 5. RoomModule
+
+- `Room` — данные номера;
+- `RoomReservation` — резерв номера на период, проверка пересечения дат;
+- `InMemoryRoomStore` — номера и резервы в памяти, добавление резерва
+  выполняется под блокировкой, чтобы два запроса не заняли номер одновременно;
+- `RoomCatalogService` — реализация `IRoomCatalogService`;
+- `RoomReservationService` — реализация `IRoomReservationService`.
+
+Порядок проверок при резервировании:
+
+1. Период: дата выселения должна быть позже даты заселения,
+   иначе `INVALID_BOOKING_PERIOD`.
+2. Номер существует, иначе `ROOM_NOT_FOUND`.
+3. Номер свободен на период, иначе `ROOM_NOT_AVAILABLE`.
