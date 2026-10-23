@@ -482,3 +482,24 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+##
+## Дополнительные правила проекта HotelManagement
+##
+
+# Локальная база данных SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# Локальные настройки и секреты
+.env.*
+appsettings.Local.json
+appsettings.*.Local.json
+secrets.json
+*.key
+*.pem
+*.p12
+
+# Локальные настройки IDE
+.vscode/
