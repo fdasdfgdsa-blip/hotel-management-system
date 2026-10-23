@@ -140,3 +140,24 @@ dotnet test
 ```
 
 Сборка выполнена без ошибок, тесты пройдены.
+
+---
+
+# 6. Проверка отслеживаемых файлов
+
+```bash
+git status --ignored
+git check-ignore -v src/HotelManagement.Api/bin src/HotelManagement.Api/obj
+```
+
+После сборки каталоги `bin/` и `obj/` всех проектов отмечены
+как игнорируемые и не попадают в `git status`.
+
+Проверка истории на наличие секретов:
+
+```bash
+git log --all --oneline -i -E -G "password=|pwd=|api_?key|private key"
+```
+
+Результат пустой. Пароли, токены и ключи в репозиторий не попадали,
+поэтому отзыв секретов и очистка истории не требуются.
