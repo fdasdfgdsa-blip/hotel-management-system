@@ -238,3 +238,41 @@ git merge --no-ff develop
 git tag -a v0.2.0 -m "Этап 2: настройка репозитория"
 git push origin main develop --tags
 ```
+
+---
+
+# 10. Граф истории
+
+```bash
+git log --oneline --graph --decorate --all
+```
+
+```text
+*   b0b4591 (HEAD -> main, tag: v0.2.0) merge: develop в main - этап 2
+|\
+| *   d75241f (develop) merge: docs/readme-editors в develop, разрешён конфликт в README.md
+| |\
+| | * 4a7ff7a docs: README - в требования добавлены Rider и VS Code
+| * |   192cc19 merge: docs/readme-ide в develop
+| |\ \
+| | |/
+| |/|
+| | * 90267ae docs: README - в требования добавлена Visual Studio 2022
+| |/
+| * 985e047 merge: chore/repository-setup в develop
+|/|
+| * ff37467 docs: version-control.md - добавлены теги, неотслеживаемые файлы и работа с секретами
+| * b331782 docs: version-control.md - добавлены правила слияния и разрешения конфликтов
+| * ad0136d docs: version-control.md - добавлены ветка chore и правила именования веток
+| * fbafc26 chore: настроены ссылки между проектами по схеме зависимостей
+| * 8cb2c56 chore: добавлены проекты тестов UnitTests и IntegrationTests
+| * 01615db chore: добавлен проект HotelManagement.Api
+| * ca32f94 chore: добавлены проекты модулей Contracts, Rooms, Booking, Services, Guests
+| * fd40aae chore: создан файл решения HotelManagement.sln
+| * d5c5cd4 chore: добавлен .editorconfig
+| * 6ad2ed9 chore: добавлен .gitattributes
+| * 8f664e9 chore: в .gitignore добавлены правила для SQLite, секретов и VS Code
+| * 5595be5 chore: добавлен .gitignore из шаблона .NET
+|/
+* 4b501ab (origin/main, origin/docs/project-artifacts, origin/HEAD, docs/project-artifacts) docs: исправлен раздел 21 - история Git дополнена коммитами по отдельным файлам артефактов и финальными правками отчёта
+```
