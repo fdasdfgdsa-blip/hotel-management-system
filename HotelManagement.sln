@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagement.Services", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagement.Guests", "src\HotelManagement.Guests\HotelManagement.Guests.csproj", "{0D76C366-DDAA-413C-BB9E-5774E714D0ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelManagement.Api", "src\HotelManagement.Api\HotelManagement.Api.csproj", "{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,18 @@ Global
 		{0D76C366-DDAA-413C-BB9E-5774E714D0ED}.Release|x64.Build.0 = Release|Any CPU
 		{0D76C366-DDAA-413C-BB9E-5774E714D0ED}.Release|x86.ActiveCfg = Release|Any CPU
 		{0D76C366-DDAA-413C-BB9E-5774E714D0ED}.Release|x86.Build.0 = Release|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Debug|x64.Build.0 = Debug|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Debug|x86.Build.0 = Debug|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Release|x64.ActiveCfg = Release|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Release|x64.Build.0 = Release|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Release|x86.ActiveCfg = Release|Any CPU
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -95,5 +109,6 @@ Global
 		{E3F31AF1-F1DF-43C0-8AB0-4993DD68B807} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{48784840-DE1E-4DCD-8FDD-54B158A6F410} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{0D76C366-DDAA-413C-BB9E-5774E714D0ED} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
+		{1637A0A1-59E0-4F8A-A1EC-496CDEA6F3B0} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 	EndGlobalSection
 EndGlobal
