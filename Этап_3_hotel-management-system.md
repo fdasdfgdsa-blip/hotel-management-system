@@ -127,3 +127,33 @@ git log -1 --oneline
 | `GET` | `/api/bookings/{id}` | Бронирование |
 
 Для проверки в `SeedData` добавлены три номера: 101, 102, 201.
+
+---
+
+# 8. Схема потока данных
+
+```text
+Клиент
+  │  POST /api/bookings
+  │  CreateBookingRequest (guestId, roomId, checkInDate, checkOutDate)
+  ▼
+ApiHost
+  │
+  ▼
+BookingModule: BookingService.CreateAsync
+  │
+  ├──► IRoomCatalogService.GetByIdAsync(roomId)
+  │        RoomModule ──► RoomDto (pricePerNight)
+  │        null ──► ROOM_NOT_FOUND
+  │
+  ├──► IRoomReservationService.ReserveAsync(ReserveRoomRequest)
+  │        RoomModule: проверка периода ──► INVALID_BOOKING_PERIOD
+  │                    проверка номера  ──► ROOM_NOT_FOUND
+  │                    проверка дат     ──► ROOM_NOT_AVAILABLE
+  │                    создание резерва ──► ReserveRoomResult(success)
+  │
+  ├── расчёт стоимости: ночи × pricePerNight
+  ├── сохранение HotelBooking
+  ▼
+CreateBookingResult ──► ApiHost ──► 201 BookingDto / 4xx { errorCode }
+```
