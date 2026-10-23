@@ -6,7 +6,10 @@
 
 - .NET SDK 9;
 - Git;
-- Visual Studio 2022 (версия 17.12 или новее).
+- одна из сред разработки:
+  - Visual Studio 2022 (версия 17.12 или новее);
+  - JetBrains Rider 2024.3 или новее;
+  - Visual Studio Code с расширением C# Dev Kit.
 
 Проверка версии .NET:
 
