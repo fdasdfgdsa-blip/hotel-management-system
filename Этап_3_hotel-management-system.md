@@ -38,3 +38,25 @@ git log -1 --oneline
 
 Данные хранятся в памяти приложения. Подключение базы данных
 в этап не входило.
+
+---
+
+# 3. Контракт взаимодействия
+
+До разработки модулей в проект `HotelManagement.Contracts` добавлены:
+
+| Тип | Назначение |
+|---|---|
+| `IRoomReservationService` | Резервирование номера — `ReserveAsync(ReserveRoomRequest, CancellationToken)` |
+| `IRoomCatalogService` | Получение номера, в том числе цены за ночь |
+| `ReserveRoomRequest`, `ReserveRoomResult` | Запрос и результат резервирования |
+| `RoomErrorCodes` | Коды ошибок: `ROOM_NOT_FOUND`, `ROOM_NOT_AVAILABLE`, `INVALID_BOOKING_PERIOD` |
+| `RoomDto` | Данные номера |
+| `CreateBookingRequest`, `BookingDto`, `CreateBookingResult` | Данные бронирования |
+
+Контракт соответствует протоколу № 1 этапа 1 (`RoomReservationContract v1`).
+Интерфейс `IRoomCatalogService` добавлен, потому что для расчёта стоимости
+`BookingModule` нужна цена номера, а результат резервирования её не содержит.
+
+Контракт описан в `docs/contracts.md` и слит в `develop` отдельной веткой
+до начала работы над модулями.
