@@ -1,0 +1,30 @@
+# Автоматическая нормализация переводов строк
+* text=auto
+
+# Исходный код и конфигурация
+*.cs        text diff=csharp
+*.csproj    text
+*.props     text
+*.targets   text
+*.json      text
+*.md        text
+*.yml       text
+*.yaml      text
+
+# Файл решения Visual Studio
+*.sln       text eol=crlf
+
+# Скрипты
+*.sh        text eol=lf
+*.ps1       text eol=crlf
+*.cmd       text eol=crlf
+
+# Двоичные файлы
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.ico       binary
+*.pdf       binary
+*.dll       binary
+*.exe       binary
+*.db        binary
