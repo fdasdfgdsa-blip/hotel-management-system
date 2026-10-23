@@ -182,3 +182,46 @@ git log --all --oneline -i -E -G "password=|pwd=|api_?key|private key"
 git checkout develop
 git merge --no-ff chore/repository-setup
 ```
+
+---
+
+# 8. Учебный конфликт
+
+От `develop` созданы две ветки, в которых по-разному изменён
+один и тот же фрагмент `README.md` — список требований:
+
+- `docs/readme-ide` — добавлена Visual Studio 2022;
+- `docs/readme-editors` — добавлены Rider и VS Code.
+
+Первая ветка слилась без конфликта, при слиянии второй
+возник конфликт:
+
+```text
+CONFLICT (content): Merge conflict in README.md
+```
+
+```text
+- .NET SDK 9;
+- Git;
+<<<<<<< HEAD
+- Visual Studio 2022 (версия 17.12 или новее).
+=======
+- JetBrains Rider 2024.3 или Visual Studio Code с расширением C# Dev Kit.
+>>>>>>> docs/readme-editors
+```
+
+Оба изменения верные, поэтому они объединены:
+
+```markdown
+- .NET SDK 9;
+- Git;
+- одна из сред разработки:
+  - Visual Studio 2022 (версия 17.12 или новее);
+  - JetBrains Rider 2024.3 или новее;
+  - Visual Studio Code с расширением C# Dev Kit.
+```
+
+```bash
+git add README.md
+git commit
+```
