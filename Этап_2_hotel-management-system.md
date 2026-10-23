@@ -30,3 +30,42 @@ git log -1 --oneline
 git checkout -b develop
 git checkout -b chore/repository-setup
 ```
+
+---
+
+# 2. Настройка .gitignore
+
+Файл создан из стандартного шаблона .NET:
+
+```bash
+dotnet new gitignore
+```
+
+Шаблон исключает каталоги `bin/` и `obj/`, настройки Visual Studio
+и Rider (`.vs/`, `.idea/`, `*.user`), результаты тестов, логи
+и временные файлы.
+
+В конец файла добавлены правила проекта:
+
+```gitignore
+# Локальная база данных SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# Локальные настройки и секреты
+.env.*
+appsettings.Local.json
+appsettings.*.Local.json
+secrets.json
+*.key
+*.pem
+*.p12
+
+# Локальные настройки IDE
+.vscode/
+```
+
+Файлы базы SQLite создаются у каждого разработчика при запуске,
+поэтому не должны храниться в репозитории. Остальные правила
+исключают файлы, которые могут содержать пароли и ключи.
