@@ -24,7 +24,7 @@ public class RoomReservationService : IRoomReservationService
             "Reserve room {RoomId} for booking {BookingId}, period {CheckInDate} - {CheckOutDate}",
             request.RoomId, request.BookingId, request.CheckInDate, request.CheckOutDate);
 
-        if (request.CheckOutDate < request.CheckInDate)
+        if (request.CheckOutDate <= request.CheckInDate)
         {
             return Task.FromResult(Reject(request, RoomErrorCodes.InvalidBookingPeriod));
         }
