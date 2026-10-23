@@ -5,7 +5,8 @@
 Для запуска проекта необходимы:
 
 - .NET SDK 9;
-- Git.
+- Git;
+- JetBrains Rider 2024.3 или Visual Studio Code с расширением C# Dev Kit.
 
 Проверка версии .NET:
 
