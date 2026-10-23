@@ -106,3 +106,37 @@ secrets.json
 
 Правила именования соответствуют контрактам этапа 1
 (`IRoomReservationService.ReserveAsync`).
+
+---
+
+# 5. Создание решения
+
+Чтобы проверить `.gitignore` на результатах сборки, создано решение
+по структуре из этапа 1:
+
+```bash
+dotnet new sln -n HotelManagement
+
+dotnet new classlib -n HotelManagement.Contracts -o src/HotelManagement.Contracts -f net9.0
+dotnet new classlib -n HotelManagement.Rooms -o src/HotelManagement.Rooms -f net9.0
+dotnet new classlib -n HotelManagement.Booking -o src/HotelManagement.Booking -f net9.0
+dotnet new classlib -n HotelManagement.Services -o src/HotelManagement.Services -f net9.0
+dotnet new classlib -n HotelManagement.Guests -o src/HotelManagement.Guests -f net9.0
+dotnet new web -n HotelManagement.Api -o src/HotelManagement.Api -f net9.0
+
+dotnet new xunit -n HotelManagement.UnitTests -o tests/HotelManagement.UnitTests -f net9.0
+dotnet new xunit -n HotelManagement.IntegrationTests -o tests/HotelManagement.IntegrationTests -f net9.0
+```
+
+Проекты добавлены в решение командой `dotnet sln add`. Ссылки между
+проектами заданы по схеме зависимостей этапа 1: модули ссылаются
+на `Contracts`, `Api` — на модули.
+
+Проверка:
+
+```bash
+dotnet build
+dotnet test
+```
+
+Сборка выполнена без ошибок, тесты пройдены.
