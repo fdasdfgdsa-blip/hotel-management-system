@@ -282,3 +282,24 @@ curl -X POST http://localhost:5282/api/bookings -H "Content-Type: application/js
 **Исправление:** в `RoomReservationService` условие изменено на
 `CheckOutDate <= CheckInDate`. Правило уточнено в
 `docs/protocol-room-reservation.md` и `docs/testing.md`.
+
+---
+
+# 12. Проверка после объединения
+
+После слияния всех веток в `develop`:
+
+```bash
+dotnet build
+dotnet test
+```
+
+```text
+Предупреждений: 0
+Ошибок: 0
+```
+
+```text
+Пройден! : не пройдено 0, пройдено 6, пропущено 0, всего 6 - HotelManagement.UnitTests.dll (net9.0)
+Пройден! : не пройдено 0, пройдено 3, пропущено 0, всего 3 - HotelManagement.IntegrationTests.dll (net9.0)
+```
