@@ -190,3 +190,47 @@ warn: HotelManagement.Booking.BookingService[0]
 
 По идентификатору бронирования видно, как один запрос проходит
 через оба модуля.
+
+---
+
+# 10. Тесты
+
+## 10.1. Модульные тесты
+
+`tests/HotelManagement.UnitTests`:
+
+| Тест | Проверка |
+|---|---|
+| `ReserveAsync_FreeRoom_ReturnsSuccess` | Свободный номер резервируется |
+| `ReserveAsync_OverlappingPeriod_ReturnsRoomNotAvailable` | Пересечение дат — `ROOM_NOT_AVAILABLE` |
+| `ReserveAsync_CheckOutBeforeCheckIn_ReturnsInvalidBookingPeriod` | Выселение раньше заселения — `INVALID_BOOKING_PERIOD` |
+| `ReserveAsync_UnknownRoom_ReturnsRoomNotFound` | Несуществующий номер — `ROOM_NOT_FOUND` |
+| `CreateAsync_ThreeNights_CalculatesTotalPriceByNights` | Стоимость = ночи × цена |
+| `CreateAsync_ReservationRejected_DoesNotSaveBooking` | При отказе в резерве бронирование не сохраняется |
+
+В тестах `BookingService` модуль номеров заменён заглушками,
+реализующими интерфейсы контракта.
+
+## 10.2. Интеграционные тесты
+
+`tests/HotelManagement.IntegrationTests` — `BookingService` работает
+с настоящими `RoomCatalogService` и `RoomReservationService`:
+
+| Тест | Сценарий |
+|---|---|
+| `CreateAsync_FreeRoom_CreatesBookingAndReservesRoom` | Успешный: бронирование создано, стоимость 14000 |
+| `CreateAsync_RoomAlreadyBooked_ReturnsRoomNotAvailable` | Отрицательный: номер занят, второе бронирование не создано |
+| `CreateAsync_SameCheckInAndCheckOut_ReturnsInvalidBookingPeriod` | Отрицательный: даты заселения и выселения совпадают |
+
+## 10.3. Проверка через API
+
+```bash
+curl -X POST http://localhost:5282/api/bookings -H "Content-Type: application/json" -d @ok.json
+```
+
+```text
+{"id":"0c9f0fc4-...","roomId":"11111111-1111-1111-1111-111111111201","checkInDate":"2026-12-10","checkOutDate":"2026-12-12","totalPrice":14000,"status":"Created"} HTTP 201
+{"errorCode":"ROOM_NOT_AVAILABLE"} HTTP 409
+{"errorCode":"INVALID_BOOKING_PERIOD"} HTTP 400
+{"errorCode":"ROOM_NOT_FOUND"} HTTP 404
+```
