@@ -234,3 +234,51 @@ curl -X POST http://localhost:5282/api/bookings -H "Content-Type: application/js
 {"errorCode":"INVALID_BOOKING_PERIOD"} HTTP 400
 {"errorCode":"ROOM_NOT_FOUND"} HTTP 404
 ```
+
+---
+
+# 11. Найденные интеграционные проблемы
+
+## Проблема 1. Повторное бронирование занятого номера через API
+
+**Как обнаружена:** при ручной проверке API два одинаковых запроса
+`POST /api/bookings` на номер 201 с 10.12 по 12.12 оба вернули `201 Created`.
+Интеграционные тесты при этом проходили.
+
+**Причина:** хранилища `InMemoryRoomStore` и `InMemoryBookingStore`
+были зарегистрированы в DI как `Scoped`. Для каждого HTTP-запроса
+создавалось новое пустое хранилище, и резерв из первого запроса
+не был виден во втором. В интеграционных тестах хранилище создаётся
+один раз, поэтому тесты ошибку не показали.
+
+**Исправление:** хранилища зарегистрированы как `Singleton`.
+После исправления второй запрос возвращает `409 ROOM_NOT_AVAILABLE`.
+
+## Проблема 2. Бронирование без ночей
+
+**Как обнаружена:** запрос с одинаковыми датами заселения и выселения
+был принят:
+
+```text
+{"id":"37201708-...","checkInDate":"2026-12-20","checkOutDate":"2026-12-20","totalPrice":0,"status":"Created"} HTTP 201
+```
+
+Добавлен интеграционный тест на этот случай, он не прошёл:
+
+```text
+[FAIL] BookingRoomIntegrationTests.CreateAsync_SameCheckInAndCheckOut_ReturnsInvalidBookingPeriod
+  Assert.False() Failure
+  Expected: False
+  Actual:   True
+Не пройден!: не пройдено 1, пройдено 2, всего 3 - HotelManagement.IntegrationTests.dll (net9.0)
+```
+
+**Причина:** в протоколе и тестовой стратегии этапа 1 некорректным
+периодом считалась только дата выселения раньше даты заселения.
+`RoomModule` проверял `CheckOutDate < CheckInDate`, и совпадающие даты
+проходили. `BookingModule` считал 0 ночей и создавал бронирование
+со стоимостью 0.
+
+**Исправление:** в `RoomReservationService` условие изменено на
+`CheckOutDate <= CheckInDate`. Правило уточнено в
+`docs/protocol-room-reservation.md` и `docs/testing.md`.
