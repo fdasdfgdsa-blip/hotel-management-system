@@ -225,3 +225,16 @@ CONFLICT (content): Merge conflict in README.md
 git add README.md
 git commit
 ```
+
+---
+
+# 9. Учебный тег
+
+После слияния `develop` в `main` создан тег контрольного состояния:
+
+```bash
+git checkout main
+git merge --no-ff develop
+git tag -a v0.2.0 -m "Этап 2: настройка репозитория"
+git push origin main develop --tags
+```
