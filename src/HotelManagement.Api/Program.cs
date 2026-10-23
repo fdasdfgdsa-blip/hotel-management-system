@@ -5,10 +5,10 @@ using HotelManagement.Rooms;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped(_ => new InMemoryRoomStore(SeedData.Rooms));
+builder.Services.AddSingleton(_ => new InMemoryRoomStore(SeedData.Rooms));
 builder.Services.AddScoped<IRoomCatalogService, RoomCatalogService>();
 builder.Services.AddScoped<IRoomReservationService, RoomReservationService>();
-builder.Services.AddScoped<InMemoryBookingStore>();
+builder.Services.AddSingleton<InMemoryBookingStore>();
 builder.Services.AddScoped<BookingService>();
 
 var app = builder.Build();
