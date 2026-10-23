@@ -67,6 +67,18 @@ public class BookingRoomIntegrationTests
         Assert.Equal(1, _bookingStore.Count);
     }
 
+    [Fact]
+    public async Task CreateAsync_SameCheckInAndCheckOut_ReturnsInvalidBookingPeriod()
+    {
+        var request = CreateRequest(new DateOnly(2026, 12, 10), new DateOnly(2026, 12, 10));
+
+        var result = await _bookingService.CreateAsync(request, CancellationToken.None);
+
+        Assert.False(result.Success);
+        Assert.Equal(RoomErrorCodes.InvalidBookingPeriod, result.ErrorCode);
+        Assert.Equal(0, _bookingStore.Count);
+    }
+
     private static CreateBookingRequest CreateRequest(DateOnly checkIn, DateOnly checkOut)
     {
         return new CreateBookingRequest(Guid.NewGuid(), RoomId, checkIn, checkOut, null);
