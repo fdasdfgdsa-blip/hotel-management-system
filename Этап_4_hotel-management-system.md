@@ -159,3 +159,134 @@ warn: HotelManagement.Booking.BookingService[0]
 `RoomModule` честно не нашёл номер с идентификатором `Guid.Empty`
 и вернул `ROOM_NOT_FOUND`. Клиент получил ответ о данных гостиницы,
 хотя проблема была в формате его запроса.
+
+---
+
+# 3. Дефект 2. Ответ 400 без кода ошибки
+
+## 3.1. Симптом
+
+Запрос с датами в формате «дата и время» возвращает `400` без JSON
+с кодом ошибки. Вместо `{"errorCode": ...}` приходит текст исключения
+со стеком вызовов. В журнале модулей бронирования записей о запросе нет.
+
+## 3.2. Версия
+
+Коммит `264f0c2`, тег `v0.3.0`.
+
+## 3.3. Условия воспроизведения
+
+Даты переданы так, как их отдаёт `Date.toISOString()` в JavaScript:
+
+```json
+{
+  "guestId": "22222222-2222-2222-2222-222222222222",
+  "roomId": "11111111-1111-1111-1111-111111111201",
+  "checkInDate": "2026-12-10T00:00:00.000Z",
+  "checkOutDate": "2026-12-12T00:00:00.000Z"
+}
+```
+
+```bash
+curl -X POST http://localhost:5282/api/bookings -H "Content-Type: application/json" -d @d2-datetime.json
+```
+
+## 3.4. Гипотезы
+
+1. Исключение внутри `BookingService` или `RoomModule`.
+2. Неверный заголовок `Content-Type`, сервер не распознал тело как JSON.
+3. Ошибка чтения тела запроса до вызова точки входа.
+
+## 3.5. Инструменты диагностики
+
+- журнал `ILogger` — проверка, дошёл ли запрос до `BookingService`;
+- стек вызовов исключения из журнала ASP.NET Core;
+- регрессионный тест через `WebApplicationFactory`
+  (пакет `Microsoft.AspNetCore.Mvc.Testing` 9.0.0).
+
+## 3.6. Наблюдаемые факты
+
+Гипотеза 1 опровергнута — в журнале нет записи `Create booking`,
+то есть `BookingService.CreateAsync` не вызывался.
+
+Гипотеза 2 опровергнута — в ответе перечислены заголовки запроса,
+`Content-Type: application/json` указан верно.
+
+Гипотеза 3 подтверждена стеком вызовов:
+
+```text
+fail: Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware[1]
+      An unhandled exception has occurred while executing the request.
+      Microsoft.AspNetCore.Http.BadHttpRequestException: Failed to read parameter "CreateBookingRequest request" from the request body as JSON.
+       ---> System.Text.Json.JsonException: The JSON value could not be converted to HotelManagement.Contracts.CreateBookingRequest. Path: $.checkInDate | LineNumber: 0 | BytePositionInLine: 138.
+       ---> System.FormatException: The JSON value is not in a supported DateOnly format.
+```
+
+**Первопричина:** тип `DateOnly` принимает только формат `yyyy-MM-dd`.
+Ошибка возникает при чтении тела запроса, до точки входа. В API не было
+единой обработки таких ошибок: в окружении Development ответ формирует
+страница исключений разработчика (текст со стеком), в Production
+возвращается пустой ответ `400`.
+
+## 3.7. Исправление
+
+В `HotelManagement.Api`:
+
+- `RouteHandlerOptions.ThrowOnBadRequest = true` — ошибка чтения тела
+  запроса во всех окружениях приводит к исключению;
+- добавлен `UseExceptionHandler`: `BadHttpRequestException` → `400`
+  с телом `{"errorCode":"INVALID_REQUEST"}` и предупреждением в журнале
+  с причиной; прочие исключения → `500` с `INTERNAL_ERROR`;
+- в `appsettings.json` отключена стандартная запись
+  `ExceptionHandlerMiddleware`, так как исключение уже журналируется
+  в обработчике.
+
+Формат даты в контракте не менялся — по протоколу № 1 даты передаются
+как `yyyy-MM-dd`, клиент получает понятный код ошибки.
+
+## 3.8. Регрессионный тест
+
+`BookingApiTests.PostBooking_DateWithTime_ReturnsBadRequestWithErrorCode` —
+отправляет запрос через `WebApplicationFactory<Program>` и проверяет
+статус `400` и код `INVALID_REQUEST`. Для теста в `Program.cs` добавлено
+объявление `public partial class Program`.
+
+До исправления тест не проходил — тело ответа не является JSON:
+
+```text
+[FAIL] BookingApiTests.PostBooking_DateWithTime_ReturnsBadRequestWithErrorCode
+  System.Text.Json.JsonException : 'M' is an invalid start of a value. Path: $ | LineNumber: 0 | BytePositionInLine: 0.
+Не пройден!: не пройдено 1, пройдено 3, всего 4 - HotelManagement.IntegrationTests.dll (net9.0)
+```
+
+## 3.9. Повторная сборка и тестирование
+
+```text
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+```
+
+```text
+Пройден! : не пройдено 0, пройдено 8, всего 8 - HotelManagement.UnitTests.dll (net9.0)
+Пройден! : не пройдено 0, пройдено 4, всего 4 - HotelManagement.IntegrationTests.dll (net9.0)
+```
+
+Тот же запрос после исправления:
+
+```text
+{"errorCode":"INVALID_REQUEST"} HTTP 400
+```
+
+```text
+warn: HotelManagement.Api[0]
+      Bad request POST /api/bookings: The JSON value could not be converted to HotelManagement.Contracts.CreateBookingRequest. Path: $.checkInDate | LineNumber: 0 | BytePositionInLine: 138.
+```
+
+## 3.10. Почему симптом отличался от первопричины
+
+Ответ выглядел как сбой сервера, а журнал модулей был пустым, поэтому
+сначала казалось, что запрос вообще не обрабатывается. На самом деле
+запрос отклонялся на этапе привязки параметров ASP.NET Core, ещё до кода
+проекта, из-за формата одного поля. Без единого обработчика ошибок
+причина была видна только в стеке вызовов.
