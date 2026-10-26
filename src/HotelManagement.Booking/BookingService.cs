@@ -32,6 +32,16 @@ public class BookingService
             "Create booking {BookingId}: guest {GuestId}, room {RoomId}, period {CheckInDate} - {CheckOutDate}",
             bookingId, request.GuestId, request.RoomId, request.CheckInDate, request.CheckOutDate);
 
+        var missingField = FindMissingField(request);
+        if (missingField is not null)
+        {
+            _logger.LogWarning(
+                "Booking {BookingId} not created: required field {Field} is empty",
+                bookingId, missingField);
+
+            return CreateBookingResult.Fail(BookingErrorCodes.InvalidRequest);
+        }
+
         var room = await _roomCatalog.GetByIdAsync(request.RoomId, cancellationToken);
         if (room is null)
         {
@@ -83,5 +93,30 @@ public class BookingService
     public Task<BookingDto?> GetByIdAsync(Guid bookingId, CancellationToken cancellationToken)
     {
         return Task.FromResult(_store.Find(bookingId)?.ToDto());
+    }
+
+    private static string? FindMissingField(CreateBookingRequest request)
+    {
+        if (request.GuestId == Guid.Empty)
+        {
+            return nameof(request.GuestId);
+        }
+
+        if (request.RoomId == Guid.Empty)
+        {
+            return nameof(request.RoomId);
+        }
+
+        if (request.CheckInDate == default)
+        {
+            return nameof(request.CheckInDate);
+        }
+
+        if (request.CheckOutDate == default)
+        {
+            return nameof(request.CheckOutDate);
+        }
+
+        return null;
     }
 }
