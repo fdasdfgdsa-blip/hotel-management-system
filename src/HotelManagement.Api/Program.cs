@@ -47,3 +47,8 @@ app.MapGet("/api/bookings/{id:guid}", async (
 });
 
 app.Run();
+
+// Нужен для WebApplicationFactory<Program> в интеграционных тестах
+public partial class Program
+{
+}
