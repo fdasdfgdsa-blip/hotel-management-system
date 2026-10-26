@@ -40,6 +40,11 @@ DTO: `RoomDto`, `ReserveRoomRequest`, `ReserveRoomResult`,
 Коды ошибок резервирования вынесены в `RoomErrorCodes`:
 `ROOM_NOT_FOUND`, `ROOM_NOT_AVAILABLE`, `INVALID_BOOKING_PERIOD`.
 
+Код `INVALID_REQUEST` (`BookingErrorCodes`) возвращается, если в запросе
+на бронирование не заполнены обязательные поля (`guestId`, `roomId`,
+`checkInDate`, `checkOutDate`) или тело запроса не удалось прочитать,
+например дата передана не в формате `yyyy-MM-dd`. HTTP-статус — `400`.
+
 `BookingModule` использует оба контракта: сначала получает номер
 через `IRoomCatalogService` (для расчёта стоимости), затем
 резервирует его через `IRoomReservationService`.

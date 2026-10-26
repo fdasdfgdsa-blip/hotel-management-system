@@ -38,6 +38,33 @@ public class BookingServiceTests
         Assert.Equal(0, store.Count);
     }
 
+    [Fact]
+    public async Task CreateAsync_EmptyRoomId_ReturnsInvalidRequest()
+    {
+        var store = new InMemoryBookingStore();
+        var service = CreateService(store, ReserveRoomResult.Ok());
+        var request = new CreateBookingRequest(
+            Guid.NewGuid(), Guid.Empty, new DateOnly(2026, 11, 1), new DateOnly(2026, 11, 4), null);
+
+        var result = await service.CreateAsync(request, CancellationToken.None);
+
+        Assert.False(result.Success);
+        Assert.Equal(BookingErrorCodes.InvalidRequest, result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task CreateAsync_MissingDates_ReturnsInvalidRequest()
+    {
+        var store = new InMemoryBookingStore();
+        var service = CreateService(store, ReserveRoomResult.Ok());
+        var request = new CreateBookingRequest(Guid.NewGuid(), RoomId, default, default, null);
+
+        var result = await service.CreateAsync(request, CancellationToken.None);
+
+        Assert.False(result.Success);
+        Assert.Equal(BookingErrorCodes.InvalidRequest, result.ErrorCode);
+    }
+
     private static BookingService CreateService(InMemoryBookingStore store, ReserveRoomResult reserveResult)
     {
         return new BookingService(
