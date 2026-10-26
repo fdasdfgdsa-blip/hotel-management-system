@@ -290,3 +290,37 @@ warn: HotelManagement.Api[0]
 запрос отклонялся на этапе привязки параметров ASP.NET Core, ещё до кода
 проекта, из-за формата одного поля. Без единого обработчика ошибок
 причина была видна только в стеке вызовов.
+
+---
+
+# 4. Проверка после исправлений
+
+После слияния веток в `develop`:
+
+```bash
+dotnet build
+dotnet test
+```
+
+```text
+Предупреждений: 0
+Ошибок: 0
+```
+
+```text
+Пройден! : не пройдено 0, пройдено 8, всего 8 - HotelManagement.UnitTests.dll (net9.0)
+Пройден! : не пройдено 0, пройдено 4, всего 4 - HotelManagement.IntegrationTests.dll (net9.0)
+```
+
+Запросы к API:
+
+```text
+--- d1-room_id
+{"errorCode":"INVALID_REQUEST"} HTTP 400
+--- d1-nodates
+{"errorCode":"INVALID_REQUEST"} HTTP 400
+--- d2-datetime
+{"errorCode":"INVALID_REQUEST"} HTTP 400
+--- ok
+{"id":"3ca9a395-...","roomId":"11111111-1111-1111-1111-111111111201","checkInDate":"2026-12-10","checkOutDate":"2026-12-12","totalPrice":14000,"status":"Created"} HTTP 201
+```
