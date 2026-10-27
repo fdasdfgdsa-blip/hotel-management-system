@@ -150,3 +150,78 @@ tests\HotelManagement.IntegrationTests\BookingApiTests.cs(23,23): warning IDE100
 | 27 | `*.csproj`, `HotelManagement.sln` | Файлы с BOM при `charset = utf-8` | Лишние изменения в diff при сохранении в редакторе | Файлы созданы шаблонами `dotnet new`, `dotnet format` их не проверяет | Принято без изменений |
 | 28 | `appsettings.json:6` | Отключена категория журнала `ExceptionHandlerMiddleware` | Не попадут служебные сообщения этой категории | Исключения журналируются в обработчике `Program.cs`; отключение убирает дублирование записей | Принято без изменений |
 | 29 | `*.csproj` | Не включено `EnforceCodeStyleInBuild` | Нарушения стиля не видны при `dotnet build` | Проверка `dotnet format --verify-no-changes` добавлена в правила слияния (`docs/version-control.md`) | Принято без изменений |
+
+---
+
+# 6. Исправления
+
+**Замечание 1.** В конец `.editorconfig` добавлено:
+
+```ini
+# Тесты: имена по схеме Метод_Сценарий_Результат, суффикс Async не требуется
+[tests/**.cs]
+dotnet_naming_rule.async_methods_end_with_async.severity = none
+```
+
+**Замечания 3, 4.**
+
+```csharp
+string errorCode = reserveResult.ErrorCode
+    ?? throw new InvalidOperationException("Reservation failed without error code");
+```
+
+```csharp
+[MemberNotNullWhen(true, nameof(Booking))]
+public bool Success => Booking is not null;
+```
+
+**Замечания 6, 7.**
+
+```csharp
+context.Response.StatusCode = badRequest.StatusCode;
+```
+
+```csharp
+return booking is null
+    ? Results.NotFound(new { errorCode = BookingErrorCodes.BookingNotFound })
+    : Results.Ok(booking);
+```
+
+**Замечание 9.**
+
+```csharp
+.OrderBy(room => room.Floor)
+.ThenBy(room => room.Number, StringComparer.Ordinal)
+```
+
+**Замечания 10, 11.** Добавлены тесты:
+
+| Класс | Тест |
+|---|---|
+| `RoomCatalogServiceTests` | `GetByIdAsync_UnknownRoom_ReturnsNull` |
+| | `GetByIdAsync_ExistingRoom_ReturnsPricePerNight` |
+| | `GetByIdAsync_RoomWithoutReservations_IsAvailable` |
+| | `GetByIdAsync_RoomReservedAroundToday_IsNotAvailable` |
+| | `GetAllAsync_RoomsOnDifferentFloors_OrderedByFloorThenNumber` |
+| `RoomReservationServiceTests` | `ReserveAsync_SameCheckInAndCheckOut_ReturnsInvalidBookingPeriod` |
+| | `ReserveAsync_CheckInOnPreviousCheckOutDay_ReturnsSuccess` |
+| `BookingApiTests` | `PostBooking_TextPlainContentType_ReturnsUnsupportedMediaType` |
+| | `PostBooking_SameRoomTwice_ReturnsCreatedThenConflict` |
+| | `PostBooking_UnknownRoom_ReturnsNotFound` |
+| | `GetBooking_UnknownId_ReturnsNotFoundWithErrorCode` |
+
+В тесте `IsAvailable` резерв захватывает соседние дни, чтобы смена даты
+во время выполнения не влияла на результат.
+
+Новые тесты запущены на коде до исправлений. Не прошли два —
+они подтверждают замечания 7 и 9:
+
+```text
+[FAIL] RoomCatalogServiceTests.GetAllAsync_RoomsOnDifferentFloors_OrderedByFloorThenNumber
+  Expected: ["101", "201", "1001"]
+  Actual:   ["1001", "101", "201"]
+[FAIL] BookingApiTests.GetBooking_UnknownId_ReturnsNotFoundWithErrorCode
+  System.Text.Json.JsonException : The input does not contain any JSON tokens.
+```
+
+Остальные новые тесты прошли сразу — они закрепляют уже правильное поведение.
