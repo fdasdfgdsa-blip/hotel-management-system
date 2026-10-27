@@ -237,7 +237,7 @@ fail: Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware[1]
 - добавлен `UseExceptionHandler`: `BadHttpRequestException` → `400`
   с телом `{"errorCode":"INVALID_REQUEST"}` и предупреждением в журнале
   с причиной; прочие исключения → `500` с `INTERNAL_ERROR`;
-- в `appsettings.json` отключена стандартная запись
+- в `appsettings.json` и `appsettings.Development.json` отключена стандартная запись
   `ExceptionHandlerMiddleware`, так как исключение уже журналируется
   в обработчике.
 
