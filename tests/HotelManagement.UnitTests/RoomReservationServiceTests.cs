@@ -66,6 +66,31 @@ public class RoomReservationServiceTests
     }
 
     [Fact]
+    public async Task ReserveAsync_SameCheckInAndCheckOut_ReturnsInvalidBookingPeriod()
+    {
+        var request = CreateRequest(RoomId, new DateOnly(2026, 11, 5), new DateOnly(2026, 11, 5));
+
+        var result = await _service.ReserveAsync(request, CancellationToken.None);
+
+        Assert.False(result.Success);
+        Assert.Equal(RoomErrorCodes.InvalidBookingPeriod, result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ReserveAsync_CheckInOnPreviousCheckOutDay_ReturnsSuccess()
+    {
+        await _service.ReserveAsync(
+            CreateRequest(RoomId, new DateOnly(2026, 11, 1), new DateOnly(2026, 11, 5)),
+            CancellationToken.None);
+
+        var result = await _service.ReserveAsync(
+            CreateRequest(RoomId, new DateOnly(2026, 11, 5), new DateOnly(2026, 11, 7)),
+            CancellationToken.None);
+
+        Assert.True(result.Success);
+    }
+
+    [Fact]
     public async Task ReserveAsync_UnknownRoom_ReturnsRoomNotFound()
     {
         var request = CreateRequest(Guid.NewGuid(), new DateOnly(2026, 11, 1), new DateOnly(2026, 11, 5));
