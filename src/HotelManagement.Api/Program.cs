@@ -75,7 +75,9 @@ app.MapGet("/api/bookings/{id:guid}", async (
     CancellationToken cancellationToken) =>
 {
     var booking = await bookings.GetByIdAsync(id, cancellationToken);
-    return booking is null ? Results.NotFound() : Results.Ok(booking);
+    return booking is null
+        ? Results.NotFound(new { errorCode = BookingErrorCodes.BookingNotFound })
+        : Results.Ok(booking);
 });
 
 app.Run();
