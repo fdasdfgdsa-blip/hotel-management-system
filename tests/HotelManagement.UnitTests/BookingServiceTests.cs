@@ -19,7 +19,7 @@ public class BookingServiceTests
         var result = await service.CreateAsync(request, CancellationToken.None);
 
         Assert.True(result.Success);
-        Assert.Equal(9000m, result.Booking!.TotalPrice);
+        Assert.Equal(9000m, result.Booking.TotalPrice);
         Assert.Equal(1, store.Count);
     }
 

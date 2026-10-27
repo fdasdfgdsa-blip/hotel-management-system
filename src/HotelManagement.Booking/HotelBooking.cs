@@ -18,7 +18,7 @@ public class HotelBooking
 
     public string? Comment { get; init; }
 
-    public string Status { get; set; } = BookingStatuses.Created;
+    public string Status { get; init; } = BookingStatuses.Created;
 
     public BookingDto ToDto()
     {

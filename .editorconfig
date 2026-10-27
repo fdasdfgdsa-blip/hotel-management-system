@@ -69,3 +69,7 @@ dotnet_naming_symbols.private_fields.applicable_kinds = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 dotnet_naming_style.underscore_camel_case.required_prefix = _
 dotnet_naming_style.underscore_camel_case.capitalization = camel_case
+
+# Тесты: имена по схеме Метод_Сценарий_Результат, суффикс Async не требуется
+[tests/**.cs]
+dotnet_naming_rule.async_methods_end_with_async.severity = none

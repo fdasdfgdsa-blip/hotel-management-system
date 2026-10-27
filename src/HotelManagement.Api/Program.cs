@@ -34,7 +34,7 @@ app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
             context.Request.Path,
             badRequest.InnerException?.Message ?? badRequest.Message);
 
-        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.StatusCode = badRequest.StatusCode;
         await context.Response.WriteAsJsonAsync(new { errorCode = BookingErrorCodes.InvalidRequest });
         return;
     }
@@ -42,7 +42,7 @@ app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
     logger.LogError(exception, "Unhandled error {Method} {Path}", context.Request.Method, context.Request.Path);
 
     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-    await context.Response.WriteAsJsonAsync(new { errorCode = "INTERNAL_ERROR" });
+    await context.Response.WriteAsJsonAsync(new { errorCode = ApiErrorCodes.InternalError });
 }));
 
 app.MapGet("/api/rooms", async (IRoomCatalogService catalog, CancellationToken cancellationToken) =>
@@ -56,7 +56,7 @@ app.MapPost("/api/bookings", async (
     var result = await bookings.CreateAsync(request, cancellationToken);
     if (result.Success)
     {
-        return Results.Created($"/api/bookings/{result.Booking!.Id}", result.Booking);
+        return Results.Created($"/api/bookings/{result.Booking.Id}", result.Booking);
     }
 
     var error = new { errorCode = result.ErrorCode };
@@ -75,7 +75,9 @@ app.MapGet("/api/bookings/{id:guid}", async (
     CancellationToken cancellationToken) =>
 {
     var booking = await bookings.GetByIdAsync(id, cancellationToken);
-    return booking is null ? Results.NotFound() : Results.Ok(booking);
+    return booking is null
+        ? Results.NotFound(new { errorCode = BookingErrorCodes.BookingNotFound })
+        : Results.Ok(booking);
 });
 
 app.Run();
