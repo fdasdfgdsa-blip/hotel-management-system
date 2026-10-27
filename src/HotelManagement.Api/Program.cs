@@ -56,7 +56,7 @@ app.MapPost("/api/bookings", async (
     var result = await bookings.CreateAsync(request, cancellationToken);
     if (result.Success)
     {
-        return Results.Created($"/api/bookings/{result.Booking!.Id}", result.Booking);
+        return Results.Created($"/api/bookings/{result.Booking.Id}", result.Booking);
     }
 
     var error = new { errorCode = result.ErrorCode };

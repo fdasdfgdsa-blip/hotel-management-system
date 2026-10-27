@@ -61,11 +61,14 @@ public class BookingService
         var reserveResult = await _roomReservation.ReserveAsync(reserveRequest, cancellationToken);
         if (!reserveResult.Success)
         {
+            string errorCode = reserveResult.ErrorCode
+                ?? throw new InvalidOperationException("Reservation failed without error code");
+
             _logger.LogWarning(
                 "Booking {BookingId} not created: {ErrorCode}",
-                bookingId, reserveResult.ErrorCode);
+                bookingId, errorCode);
 
-            return CreateBookingResult.Fail(reserveResult.ErrorCode!);
+            return CreateBookingResult.Fail(errorCode);
         }
 
         int nights = request.CheckOutDate.DayNumber - request.CheckInDate.DayNumber;
