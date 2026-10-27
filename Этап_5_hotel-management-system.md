@@ -21,3 +21,23 @@ git log -1 --oneline
 `fix/code-inspection` от `develop`.
 
 Номера строк в таблице замечаний указаны по коммиту `4e8bf32`.
+
+---
+
+# 2. Объём и порядок инспекции
+
+Проверены все файлы проекта:
+
+| Область | Файлы |
+|---|---|
+| `HotelManagement.Contracts` | DTO, интерфейсы `IRoomReservationService`, `IRoomCatalogService`, коды ошибок |
+| `HotelManagement.Rooms` | `Room`, `RoomReservation`, `InMemoryRoomStore`, `RoomCatalogService`, `RoomReservationService` |
+| `HotelManagement.Booking` | `HotelBooking`, `BookingStatuses`, `InMemoryBookingStore`, `BookingService` |
+| `HotelManagement.Api` | `Program.cs`, `SeedData.cs`, `appsettings*.json`, `launchSettings.json` |
+| `tests/*` | модульные и интеграционные тесты |
+| Конфигурация | `.editorconfig`, `.gitignore`, `.gitattributes`, `*.csproj`, `HotelManagement.sln` |
+| Документация | `README.md`, `docs/*.md` |
+
+Каждый файл просматривался по всем пунктам из задания (раздел 4).
+Документация сверялась с кодом в рамках пункта «корректность внешних
+контрактов». Найденные замечания занесены в таблицу (раздел 5).
