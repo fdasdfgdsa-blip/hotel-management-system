@@ -37,7 +37,7 @@ public class InMemoryRoomStore
     {
         lock (_sync)
         {
-            var isBusy = _reservations.Any(r =>
+            bool isBusy = _reservations.Any(r =>
                 r.RoomId == reservation.RoomId &&
                 r.Overlaps(reservation.CheckInDate, reservation.CheckOutDate));
 

@@ -22,7 +22,7 @@ public class BookingApiTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task PostBooking_DateWithTime_ReturnsBadRequestWithErrorCode()
     {
-        var body = $$"""
+        string body = $$"""
             {
               "guestId": "22222222-2222-2222-2222-222222222222",
               "roomId": "{{RoomId}}",
@@ -38,7 +38,8 @@ public class BookingApiTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
-        Assert.Equal(BookingErrorCodes.InvalidRequest, error!.ErrorCode);
+        Assert.NotNull(error);
+        Assert.Equal(BookingErrorCodes.InvalidRequest, error.ErrorCode);
     }
 
     private sealed record ErrorResponse(string ErrorCode);

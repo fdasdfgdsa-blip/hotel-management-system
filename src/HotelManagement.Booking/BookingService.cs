@@ -32,7 +32,7 @@ public class BookingService
             "Create booking {BookingId}: guest {GuestId}, room {RoomId}, period {CheckInDate} - {CheckOutDate}",
             bookingId, request.GuestId, request.RoomId, request.CheckInDate, request.CheckOutDate);
 
-        var missingField = FindMissingField(request);
+        string? missingField = FindMissingField(request);
         if (missingField is not null)
         {
             _logger.LogWarning(
@@ -68,7 +68,7 @@ public class BookingService
             return CreateBookingResult.Fail(reserveResult.ErrorCode!);
         }
 
-        var nights = request.CheckOutDate.DayNumber - request.CheckInDate.DayNumber;
+        int nights = request.CheckOutDate.DayNumber - request.CheckInDate.DayNumber;
 
         var booking = new HotelBooking
         {
