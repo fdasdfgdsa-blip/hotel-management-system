@@ -4,18 +4,32 @@
 
 Предполагаются следующие основные точки входа.
 
-| Метод | Адрес | Назначение |
-|-------|-------|-----------|
-| GET | /api/rooms | Получение списка номеров |
-| GET | /api/rooms/{id} | Получение номера |
-| POST | /api/bookings | Создание бронирования |
-| GET | /api/bookings/{id} | Получение бронирования |
-| POST | /api/bookings/{id}/cancel | Отмена бронирования |
-| POST | /api/bookings/{id}/check-in | Заселение гостя |
-| POST | /api/bookings/{id}/check-out | Выселение гостя |
-| POST | /api/bookings/{id}/services | Добавление услуги |
-| GET | /api/guests/{id} | Получение данных гостя |
-| GET | /api/services | Список дополнительных услуг |
+| Метод | Адрес | Назначение | Состояние |
+|-------|-------|-----------|-----------|
+| GET | /api/rooms | Получение списка номеров | Реализовано |
+| GET | /api/rooms/{id} | Получение номера | Не реализовано |
+| POST | /api/bookings | Создание бронирования | Реализовано |
+| GET | /api/bookings/{id} | Получение бронирования | Реализовано |
+| POST | /api/bookings/{id}/cancel | Отмена бронирования | Не реализовано |
+| POST | /api/bookings/{id}/check-in | Заселение гостя | Не реализовано |
+| POST | /api/bookings/{id}/check-out | Выселение гостя | Не реализовано |
+| POST | /api/bookings/{id}/services | Добавление услуги | Не реализовано |
+| GET | /api/guests/{id} | Получение данных гостя | Не реализовано |
+| GET | /api/services | Список дополнительных услуг | Не реализовано |
+
+## Ответы реализованных точек входа
+
+| Точка входа | Статус | Тело |
+|---|---|---|
+| `GET /api/rooms` | `200` | список `RoomDto` |
+| `POST /api/bookings` | `201` | `BookingDto`, заголовок `Location` |
+| | `400` | `{ "errorCode": "INVALID_REQUEST" }` или `{ "errorCode": "INVALID_BOOKING_PERIOD" }` |
+| | `404` | `{ "errorCode": "ROOM_NOT_FOUND" }` |
+| | `409` | `{ "errorCode": "ROOM_NOT_AVAILABLE" }` |
+| | `415` | без тела — заголовок `Content-Type` не `application/json` |
+| `GET /api/bookings/{id}` | `200` | `BookingDto` |
+| | `404` | `{ "errorCode": "BOOKING_NOT_FOUND" }`; если `id` не является GUID — без тела |
+| Любая | `500` | `{ "errorCode": "INTERNAL_ERROR" }` |
 
 Контракт API на последующих этапах может быть дополнительно
 описан средствами OpenAPI.
@@ -43,7 +57,13 @@ DTO: `RoomDto`, `ReserveRoomRequest`, `ReserveRoomResult`,
 Код `INVALID_REQUEST` (`BookingErrorCodes`) возвращается, если в запросе
 на бронирование не заполнены обязательные поля (`guestId`, `roomId`,
 `checkInDate`, `checkOutDate`) или тело запроса не удалось прочитать,
-например дата передана не в формате `yyyy-MM-dd`. HTTP-статус — `400`.
+например дата передана не в формате `yyyy-MM-dd`.
+
+Код `BOOKING_NOT_FOUND` (`BookingErrorCodes`) возвращается, если
+бронирование с указанным идентификатором не найдено.
+
+При непредвиденной ошибке сервера возвращается код `INTERNAL_ERROR`
+(`ApiErrorCodes`).
 
 `BookingModule` использует оба контракта: сначала получает номер
 через `IRoomCatalogService` (для расчёта стоимости), затем
