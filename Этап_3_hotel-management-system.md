@@ -16,8 +16,8 @@ git status
 git log -1 --oneline
 ```
 
-Текущая ветка — `main`, последний коммит — `8777481` (завершение этапа 2,
-тег `v0.2.0`). Проекты модулей на этот момент были пустыми.
+Текущая ветка — `main`, последний коммит — `8777481` (слияние отчёта этапа 2 в `main`,
+после тега `v0.2.0`). Проекты модулей на этот момент были пустыми.
 
 Работа велась от ветки `develop`.
 
@@ -229,7 +229,7 @@ curl -X POST http://localhost:5282/api/bookings -H "Content-Type: application/js
 ```
 
 ```text
-{"id":"0c9f0fc4-...","roomId":"11111111-1111-1111-1111-111111111201","checkInDate":"2026-12-10","checkOutDate":"2026-12-12","totalPrice":14000,"status":"Created"} HTTP 201
+{"id":"0c9f0fc4-cae0-4bed-a371-d806585d61df","guestId":"22222222-2222-2222-2222-222222222222","roomId":"11111111-1111-1111-1111-111111111201","checkInDate":"2026-12-10","checkOutDate":"2026-12-12","totalPrice":14000,"status":"Created"} HTTP 201
 {"errorCode":"ROOM_NOT_AVAILABLE"} HTTP 409
 {"errorCode":"INVALID_BOOKING_PERIOD"} HTTP 400
 {"errorCode":"ROOM_NOT_FOUND"} HTTP 404
@@ -260,7 +260,7 @@ curl -X POST http://localhost:5282/api/bookings -H "Content-Type: application/js
 был принят:
 
 ```text
-{"id":"37201708-...","checkInDate":"2026-12-20","checkOutDate":"2026-12-20","totalPrice":0,"status":"Created"} HTTP 201
+{"id":"37201708-d6ea-4cbe-a9eb-483405e28e00","guestId":"22222222-2222-2222-2222-222222222222","roomId":"11111111-1111-1111-1111-111111111201","checkInDate":"2026-12-20","checkOutDate":"2026-12-20","totalPrice":0,"status":"Created"} HTTP 201
 ```
 
 Добавлен интеграционный тест на этот случай, он не прошёл:
