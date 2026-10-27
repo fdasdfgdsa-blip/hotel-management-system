@@ -16,7 +16,8 @@ public class RoomCatalogService : IRoomCatalogService
         var today = DateOnly.FromDateTime(DateTime.Today);
 
         IReadOnlyList<RoomDto> rooms = _store.GetAll()
-            .OrderBy(room => room.Number)
+            .OrderBy(room => room.Floor)
+            .ThenBy(room => room.Number, StringComparer.Ordinal)
             .Select(room => ToDto(room, today))
             .ToList();
 
