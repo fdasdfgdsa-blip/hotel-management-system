@@ -322,7 +322,7 @@ dotnet test
 --- d2-datetime
 {"errorCode":"INVALID_REQUEST"} HTTP 400
 --- ok
-{"id":"3ca9a395-...","roomId":"11111111-1111-1111-1111-111111111201","checkInDate":"2026-12-10","checkOutDate":"2026-12-12","totalPrice":14000,"status":"Created"} HTTP 201
+{"id":"3ca9a395-0c02-4246-ad7d-65ad6c5ede7e","guestId":"22222222-2222-2222-2222-222222222222","roomId":"11111111-1111-1111-1111-111111111201","checkInDate":"2026-12-10","checkOutDate":"2026-12-12","totalPrice":14000,"status":"Created"} HTTP 201
 ```
 
 ---
