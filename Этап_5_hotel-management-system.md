@@ -225,3 +225,28 @@ return booking is null
 ```
 
 Остальные новые тесты прошли сразу — они закрепляют уже правильное поведение.
+
+---
+
+# 7. Проверка после исправлений
+
+```bash
+dotnet format --verify-no-changes
+```
+
+Команда завершилась без замечаний и без изменения файлов.
+
+```bash
+dotnet build
+dotnet test
+```
+
+```text
+Предупреждений: 0
+Ошибок: 0
+```
+
+```text
+Пройден! : не пройдено 0, пройдено 15, всего 15 - HotelManagement.UnitTests.dll (net9.0)
+Пройден! : не пройдено 0, пройдено 8, всего 8 - HotelManagement.IntegrationTests.dll (net9.0)
+```
