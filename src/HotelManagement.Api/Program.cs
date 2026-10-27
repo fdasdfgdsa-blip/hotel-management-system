@@ -34,7 +34,7 @@ app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
             context.Request.Path,
             badRequest.InnerException?.Message ?? badRequest.Message);
 
-        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.StatusCode = badRequest.StatusCode;
         await context.Response.WriteAsJsonAsync(new { errorCode = BookingErrorCodes.InvalidRequest });
         return;
     }
