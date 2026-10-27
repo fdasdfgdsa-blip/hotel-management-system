@@ -42,7 +42,7 @@ app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
     logger.LogError(exception, "Unhandled error {Method} {Path}", context.Request.Method, context.Request.Path);
 
     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-    await context.Response.WriteAsJsonAsync(new { errorCode = "INTERNAL_ERROR" });
+    await context.Response.WriteAsJsonAsync(new { errorCode = ApiErrorCodes.InternalError });
 }));
 
 app.MapGet("/api/rooms", async (IRoomCatalogService catalog, CancellationToken cancellationToken) =>
